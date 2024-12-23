@@ -855,23 +855,29 @@ public class MainWindow extends JFrame implements ActionListener {
 	// the default browser of our platform
 
 	private void LaunchSelectedURL(String url) {
+		boolean xdg = true;
 
 		if (Desktop.isDesktopSupported()) {
 			Desktop desktop = Desktop.getDesktop();
 
-			try {
-				desktop.browse(new URI(url));
+			if (desktop.isSupported(Desktop.Action.BROWSE)) {
+				try {
+					desktop.browse(new URI(url));
+					xdg = false;
 
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 
+				}
 			}
 			// Linux and Mac specific code in order to launch url
-		} else {
+		}
+
+		if (xdg) {
 			Runtime runtime = Runtime.getRuntime();
 
 			try {
